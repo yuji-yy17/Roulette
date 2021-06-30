@@ -14,10 +14,11 @@ class InputAutomaticallyActivity : AppCompatActivity() {
     }
 
     fun sendMessage(view: View) {
-        val editText = findViewById<EditText>(R.id.editText)
-        val message = editText.text.toString()
-        val intent = Intent(this, DisplayMessageActivity::class.java).apply {
-            putExtra(EXTRA_MESSAGE, message)
+        // val editText = findViewById<EditText>(R.id.editText)
+        // val message = editText.text.toString()
+        val message = ""
+        val intent = Intent(this, RouletteActivity::class.java).apply {
+            putExtra("msg", message)
         }
         startActivity(intent)
     }
