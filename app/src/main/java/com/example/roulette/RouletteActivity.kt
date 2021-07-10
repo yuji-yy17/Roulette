@@ -1,6 +1,10 @@
 package com.example.roulette
 
-import android.media.Image
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
@@ -10,7 +14,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.random.Random
 
-class RouletteActivity : AppCompatActivity() {
+
+class RouletteActivity : AppCompatActivity(), SensorEventListener {
+
+    var sensor_x: Float = 0.0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +33,16 @@ class RouletteActivity : AppCompatActivity() {
         val list: ArrayList<String>
         list = intent.getStringArrayListExtra("msg") as ArrayList<String>
 
+        val sensorManager: SensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+        if (sensor != null) {
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
+        } else {
+            val ns = "No Support"
+            text.text = ns
+        }
+
         when (list.size) {
             1 -> roulette.setImageResource(R.drawable.pie1)
             2 -> roulette.setImageResource(R.drawable.pie2)
@@ -38,6 +55,35 @@ class RouletteActivity : AppCompatActivity() {
 
         roulette.setOnClickListener {
             // 現在の回転角を取得してその結果になるようにルーレットを回す
+            val num: Float
+            if (sensor_x <= 0) {
+                num = - sensor_x
+            } else {
+                num = - sensor_x + 20
+            }
+            if (!spinning) {
+                val newDir: Int = 1800 + (360 - (num * 18).toInt())
+                val pivotX: Float = roulette.width.toFloat() / 2
+                val pivotY: Float = roulette.height.toFloat() / 2
+
+                val rotate = RotateAnimation(lastDir.toFloat(), newDir.toFloat(), pivotX, pivotY)
+                rotate.duration = 3000
+                rotate.fillAfter = true
+                rotate.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation) {
+                        spinning = true
+                    }
+                    override fun onAnimationEnd(animation: Animation) {
+                        text.text = list.get(calcDir(list.size, newDir - 1800))
+                        spinning = false
+                    }
+                    override fun onAnimationRepeat(animation: Animation) {
+
+                    }
+                })
+                lastDir = newDir - 1800
+                roulette.startAnimation(rotate)
+            }
         }
 
         button_spin.setOnClickListener {
@@ -54,7 +100,6 @@ class RouletteActivity : AppCompatActivity() {
                         spinning = true
                     }
                     override fun onAnimationEnd(animation: Animation) {
-                        println(newDir - 1800)
                         text.text = list.get(calcDir(list.size, newDir - 1800))
                         spinning = false
                     }
@@ -81,4 +126,31 @@ class RouletteActivity : AppCompatActivity() {
         }
         return count
     }
+
+    override fun onSensorChanged(event: SensorEvent) {
+        val sensorX: Float
+        val sensorY: Float
+        val sensorZ: Float
+
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            sensorX = event.values[0]
+            sensorY = event.values[1]
+            sensorZ = event.values[2]
+            sensor_x = sensorX
+            // println("X:${sensorX}, Y:${sensorY}, Z:${sensorZ}")
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // do nothing
+    }
+
+//    override fun onResume() {
+//        super.onResume()
+//    }
+
+//    override fun onPause() {
+//        super.onPause()
+//        sensorManager.unregisterListener(this);
+//    }
 }
