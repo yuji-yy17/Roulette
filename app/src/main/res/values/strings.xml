@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Roulette</string>
     <string name="edit_message">Enter an item</string>
-    <string name="button_manual">手動でやる</string>
-    <string name="button_automatic">自動でやる</string>
+    <string name="button_manual">手動で項目を入力</string>
+    <string name="button_automatic">自動で項目を入力</string>
     <string name="button_add">項目の追加</string>
     <string name="button_send">ルーレットの作成</string>
     <string name="button_delete">削除</string>
     <string name="received_message">受け取ったメッセージ</string>
+    <string name="button_spin">スタート</string>>
     <string name="title_activity_input_manually">InputManuallyActivity</string>
 </resources>
