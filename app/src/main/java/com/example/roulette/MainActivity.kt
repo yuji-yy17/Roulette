@@ -13,14 +13,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val button_manual = findViewById<Button>(R.id.button_manual)
-        val button_automatic = findViewById<Button>(R.id.button_automatic)
 
         button_manual.setOnClickListener{
             val intent = Intent(this, InputManuallyActivity::class.java)
-            startActivity(intent)
-        }
-        button_automatic.setOnClickListener{
-            val intent = Intent(this, InputAutomaticallyActivity::class.java)
             startActivity(intent)
         }
     }

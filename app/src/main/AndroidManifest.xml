@@ -14,10 +14,6 @@
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".InputAutomaticallyActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
-        <activity
             android:name=".RouletteActivity"
             android:parentActivityName=".InputManuallyActivity">
         </activity>
