@@ -8,5 +8,6 @@
     <string name="button_delete">削除</string>
     <string name="received_message">受け取ったメッセージ</string>
     <string name="button_spin">スタート</string>>
+    <string name="result_message">Result</string>>
     <string name="title_activity_input_manually">InputManuallyActivity</string>
 </resources>
