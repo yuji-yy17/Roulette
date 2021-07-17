@@ -17,7 +17,7 @@ import kotlin.random.Random
 
 class RouletteActivity : AppCompatActivity(), SensorEventListener {
 
-    var sensor_x: Float = 0.0f
+    var sensor_X: Float = 0.0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,15 +54,8 @@ class RouletteActivity : AppCompatActivity(), SensorEventListener {
         }
 
         roulette.setOnClickListener {
-            // 現在の回転角を取得してその結果になるようにルーレットを回す
-            val num: Float
-            if (sensor_x <= 0) {
-                num = - sensor_x
-            } else {
-                num = - sensor_x + 20
-            }
             if (!spinning) {
-                val newDir: Int = 1800 + (360 - (num * 18).toInt())
+                val newDir: Int = 1800 + (360 - sensorToDir(sensor_X))
                 val pivotX: Float = roulette.width.toFloat() / 2
                 val pivotY: Float = roulette.height.toFloat() / 2
 
@@ -113,6 +106,16 @@ class RouletteActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    fun sensorToDir(sensor: Float): Int {
+        val num: Float
+        if (sensor <= 0) {
+            num = - sensor * 18
+        } else {
+            num = (- sensor + 20) * 18
+        }
+        return num.toInt()
+    }
+
     fun calcDir(num: Int, dir: Int): Int {
         var count = 0
         var direction = 360 - dir
@@ -128,29 +131,12 @@ class RouletteActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        val sensorX: Float
-        val sensorY: Float
-        val sensorZ: Float
-
         if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-            sensorX = event.values[0]
-            sensorY = event.values[1]
-            sensorZ = event.values[2]
-            sensor_x = sensorX
-            // println("X:${sensorX}, Y:${sensorY}, Z:${sensorZ}")
+            sensor_X = event.values[0]
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // do nothing
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//    }
-
-//    override fun onPause() {
-//        super.onPause()
-//        sensorManager.unregisterListener(this);
-//    }
 }
